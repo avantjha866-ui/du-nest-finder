@@ -1,0 +1,1 @@
+REVOKE SELECT (owner_name, whatsapp, phone2, notes) ON public.listings FROM anon, authenticated;
