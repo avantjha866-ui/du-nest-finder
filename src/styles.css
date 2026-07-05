@@ -31,54 +31,63 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* HomeWise palette */
   --color-navy: var(--navy);
   --color-navy-light: var(--navy-light);
   --color-navy-soft: var(--navy-soft);
-  --color-brand-green: var(--brand-green);
-  --color-brand-green-dark: var(--brand-green-dark);
-  --color-amber-soft: var(--amber-soft);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-orange-dark: var(--brand-orange-dark);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-green: var(--brand-orange);
+  --color-brand-green-dark: var(--brand-orange-dark);
+  --color-amber-soft: var(--brand-gold);
 
-  --font-display: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-display: "Montserrat", "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
 }
 
 :root {
   --radius: 0.75rem;
 
-  --navy: #1a1a2e;
-  --navy-light: #2a2a45;
-  --navy-soft: #f4f5fa;
-  --brand-green: #639922;
-  --brand-green-dark: #4f7d1b;
-  --amber-soft: #f59e0b;
+  /* HomeWise brand */
+  --navy: #0a1628;
+  --navy-light: #142338;
+  --navy-soft: #f4f6fa;
+  --brand-orange: #d94f2b;
+  --brand-orange-dark: #b03d1e;
+  --brand-blue: #1e5a8a;
+  --brand-cream: #e8dcc8;
+  --brand-gold: #c9a84c;
 
   --background: #ffffff;
-  --foreground: #1a1a2e;
+  --foreground: #0a1628;
   --card: #ffffff;
-  --card-foreground: #1a1a2e;
+  --card-foreground: #0a1628;
   --popover: #ffffff;
-  --popover-foreground: #1a1a2e;
-  --primary: #1a1a2e;
+  --popover-foreground: #0a1628;
+  --primary: #d94f2b;
   --primary-foreground: #ffffff;
-  --secondary: #f4f5fa;
-  --secondary-foreground: #1a1a2e;
-  --muted: #f4f5fa;
-  --muted-foreground: #64647a;
-  --accent: #eef5e3;
-  --accent-foreground: #4f7d1b;
+  --secondary: #f4f6fa;
+  --secondary-foreground: #0a1628;
+  --muted: #f4f6fa;
+  --muted-foreground: #5b6779;
+  --accent: #fbeee5;
+  --accent-foreground: #b03d1e;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
   --border: #e5e7ef;
   --input: #e5e7ef;
-  --ring: #639922;
+  --ring: #d94f2b;
 }
 
 .dark {
-  --background: #0f0f1a;
+  --background: #0a1628;
   --foreground: #ffffff;
-  --card: #1a1a2e;
+  --card: #142338;
   --card-foreground: #ffffff;
-  --primary: #639922;
+  --primary: #d94f2b;
   --primary-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.1);
 }
@@ -97,13 +106,19 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
+}
+
+@utility font-tagline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 @utility hero-grid-bg {
   background-image:
-    radial-gradient(circle at 20% 10%, rgba(99, 153, 34, 0.18), transparent 45%),
-    radial-gradient(circle at 80% 60%, rgba(99, 153, 34, 0.10), transparent 50%),
-    linear-gradient(180deg, #1a1a2e 0%, #14142a 100%);
+    radial-gradient(circle at 20% 10%, rgba(217, 79, 43, 0.20), transparent 45%),
+    radial-gradient(circle at 80% 60%, rgba(30, 90, 138, 0.18), transparent 50%),
+    linear-gradient(180deg, #0a1628 0%, #071120 100%);
 }

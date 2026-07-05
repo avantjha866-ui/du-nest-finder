@@ -12,16 +12,16 @@ export const Route = createFileRoute("/api/public/contact/$listingId")({
 
         const { data, error } = await directSupabase
           .from("listings")
-          .select("name, whatsapp")
+          .select("name, owner_whatsapp")
           .eq("id", listingId)
           .eq("status", "approved")
           .maybeSingle();
 
-        if (error || !data?.whatsapp) {
+        if (error || !data?.owner_whatsapp) {
           return new Response("Owner contact is unavailable.", { status: 404 });
         }
 
-        const number = data.whatsapp.replace(/[^0-9]/g, "");
+        const number = data.owner_whatsapp.replace(/[^0-9]/g, "");
         if (!number) return new Response("Owner contact is unavailable.", { status: 404 });
 
         const message = `Hi, I found your listing on DUNest. I'm interested in ${data.name || "your property"}. Can we talk?`;

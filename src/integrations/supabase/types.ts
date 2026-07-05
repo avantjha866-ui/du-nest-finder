@@ -17,12 +17,15 @@ export type Database = {
       listings: {
         Row: {
           ac: string | null
+          address: string | null
           area_description: string | null
           atm: string | null
           auto_cost: number | null
+          available_from: string | null
           breakfast_menu: string | null
           breakfast_time: string | null
-          college: string | null
+          college: string
+          cook_available: boolean
           cook_cost: string | null
           created_at: string
           curfew: string | null
@@ -31,48 +34,72 @@ export type Database = {
           dinner_time: string | null
           electricity: string | null
           electricity_cost: string | null
+          enquiries: number
+          flat_type: string | null
           food_type: string | null
           gender: string | null
           gym_distance: string | null
           gym_name: string | null
           gym_price: number | null
+          has_double: boolean
+          has_single: boolean
+          has_triple: boolean
           hospital: string | null
           id: string
-          jogging: string | null
+          ideal_sharers: number | null
+          is_featured: boolean
+          jogging_spot: string | null
           laundry: string | null
           laundry_cost: string | null
-          locality: string | null
+          locality: string
           lunch_menu: string | null
           lunch_time: string | null
+          maid_available: boolean
           maid_cost: string | null
           market: string | null
           metro_fare: number | null
           metro_station: string | null
           metro_walk_min: number | null
-          name: string | null
+          name: string
           negotiable: string | null
-          notes: string | null
+          notice_period: string | null
+          owner_alternate_phone: string | null
+          owner_email: string | null
+          owner_id: string | null
           owner_name: string | null
+          owner_whatsapp: string | null
+          per_person_2: number | null
+          per_person_3: number | null
+          per_person_4: number | null
           pharmacy: string | null
-          phone2: string | null
-          rent: number | null
+          photos: string[] | null
+          price_double: number | null
+          price_single: number | null
+          price_triple: number | null
           security: string[] | null
-          sharers: number | null
+          security_score: number | null
           status: string
+          total_rent: number | null
           type: string | null
+          updated_at: string
+          views: number
           walk_min: number | null
           water: string | null
-          whatsapp: string | null
+          water_cost: string | null
           wifi: string | null
+          wifi_cost: string | null
         }
         Insert: {
           ac?: string | null
+          address?: string | null
           area_description?: string | null
           atm?: string | null
           auto_cost?: number | null
+          available_from?: string | null
           breakfast_menu?: string | null
           breakfast_time?: string | null
-          college?: string | null
+          college: string
+          cook_available?: boolean
           cook_cost?: string | null
           created_at?: string
           curfew?: string | null
@@ -81,48 +108,72 @@ export type Database = {
           dinner_time?: string | null
           electricity?: string | null
           electricity_cost?: string | null
+          enquiries?: number
+          flat_type?: string | null
           food_type?: string | null
           gender?: string | null
           gym_distance?: string | null
           gym_name?: string | null
           gym_price?: number | null
+          has_double?: boolean
+          has_single?: boolean
+          has_triple?: boolean
           hospital?: string | null
           id?: string
-          jogging?: string | null
+          ideal_sharers?: number | null
+          is_featured?: boolean
+          jogging_spot?: string | null
           laundry?: string | null
           laundry_cost?: string | null
-          locality?: string | null
+          locality: string
           lunch_menu?: string | null
           lunch_time?: string | null
+          maid_available?: boolean
           maid_cost?: string | null
           market?: string | null
           metro_fare?: number | null
           metro_station?: string | null
           metro_walk_min?: number | null
-          name?: string | null
+          name: string
           negotiable?: string | null
-          notes?: string | null
+          notice_period?: string | null
+          owner_alternate_phone?: string | null
+          owner_email?: string | null
+          owner_id?: string | null
           owner_name?: string | null
+          owner_whatsapp?: string | null
+          per_person_2?: number | null
+          per_person_3?: number | null
+          per_person_4?: number | null
           pharmacy?: string | null
-          phone2?: string | null
-          rent?: number | null
+          photos?: string[] | null
+          price_double?: number | null
+          price_single?: number | null
+          price_triple?: number | null
           security?: string[] | null
-          sharers?: number | null
+          security_score?: number | null
           status?: string
+          total_rent?: number | null
           type?: string | null
+          updated_at?: string
+          views?: number
           walk_min?: number | null
           water?: string | null
-          whatsapp?: string | null
+          water_cost?: string | null
           wifi?: string | null
+          wifi_cost?: string | null
         }
         Update: {
           ac?: string | null
+          address?: string | null
           area_description?: string | null
           atm?: string | null
           auto_cost?: number | null
+          available_from?: string | null
           breakfast_menu?: string | null
           breakfast_time?: string | null
-          college?: string | null
+          college?: string
+          cook_available?: boolean
           cook_cost?: string | null
           created_at?: string
           curfew?: string | null
@@ -131,194 +182,247 @@ export type Database = {
           dinner_time?: string | null
           electricity?: string | null
           electricity_cost?: string | null
+          enquiries?: number
+          flat_type?: string | null
           food_type?: string | null
           gender?: string | null
           gym_distance?: string | null
           gym_name?: string | null
           gym_price?: number | null
+          has_double?: boolean
+          has_single?: boolean
+          has_triple?: boolean
           hospital?: string | null
           id?: string
-          jogging?: string | null
+          ideal_sharers?: number | null
+          is_featured?: boolean
+          jogging_spot?: string | null
           laundry?: string | null
           laundry_cost?: string | null
-          locality?: string | null
+          locality?: string
           lunch_menu?: string | null
           lunch_time?: string | null
+          maid_available?: boolean
           maid_cost?: string | null
           market?: string | null
           metro_fare?: number | null
           metro_station?: string | null
           metro_walk_min?: number | null
-          name?: string | null
+          name?: string
           negotiable?: string | null
-          notes?: string | null
+          notice_period?: string | null
+          owner_alternate_phone?: string | null
+          owner_email?: string | null
+          owner_id?: string | null
           owner_name?: string | null
+          owner_whatsapp?: string | null
+          per_person_2?: number | null
+          per_person_3?: number | null
+          per_person_4?: number | null
           pharmacy?: string | null
-          phone2?: string | null
-          rent?: number | null
+          photos?: string[] | null
+          price_double?: number | null
+          price_single?: number | null
+          price_triple?: number | null
           security?: string[] | null
-          sharers?: number | null
+          security_score?: number | null
           status?: string
+          total_rent?: number | null
           type?: string | null
+          updated_at?: string
+          views?: number
           walk_min?: number | null
           water?: string | null
-          whatsapp?: string | null
+          water_cost?: string | null
           wifi?: string | null
+          wifi_cost?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listings_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "pg_owners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pg_owners: {
+        Row: {
+          alternate_phone: string | null
+          created_at: string
+          email: string
+          id: string
+          is_verified: boolean
+          name: string
+          status: string
+          total_listings: number
+          updated_at: string
+          user_id: string | null
+          whatsapp: string
+        }
+        Insert: {
+          alternate_phone?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          is_verified?: boolean
+          name: string
+          status?: string
+          total_listings?: number
+          updated_at?: string
+          user_id?: string | null
+          whatsapp: string
+        }
+        Update: {
+          alternate_phone?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          is_verified?: boolean
+          name?: string
+          status?: string
+          total_listings?: number
+          updated_at?: string
+          user_id?: string | null
+          whatsapp?: string
+        }
+        Relationships: []
+      }
+      roommate_profiles: {
+        Row: {
+          about_me: string | null
+          budget_max: number | null
+          budget_min: number | null
+          college: string
+          course: string | null
+          created_at: string
+          gender_preference: string | null
+          id: string
+          move_in_date: string | null
+          name: string
+          preferred_area: string | null
+          status: string
+          whatsapp: string
+          year: string | null
+        }
+        Insert: {
+          about_me?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          college: string
+          course?: string | null
+          created_at?: string
+          gender_preference?: string | null
+          id?: string
+          move_in_date?: string | null
+          name: string
+          preferred_area?: string | null
+          status?: string
+          whatsapp: string
+          year?: string | null
+        }
+        Update: {
+          about_me?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          college?: string
+          course?: string | null
+          created_at?: string
+          gender_preference?: string | null
+          id?: string
+          move_in_date?: string | null
+          name?: string
+          preferred_area?: string | null
+          status?: string
+          whatsapp?: string
+          year?: string | null
+        }
+        Relationships: []
+      }
+      student_interests: {
+        Row: {
+          budget: string | null
+          college: string | null
+          created_at: string
+          gender_preference: string | null
+          id: string
+          listing_id: string | null
+          move_in_date: string | null
+          name: string | null
+          whatsapp: string | null
+          year: string | null
+        }
+        Insert: {
+          budget?: string | null
+          college?: string | null
+          created_at?: string
+          gender_preference?: string | null
+          id?: string
+          listing_id?: string | null
+          move_in_date?: string | null
+          name?: string | null
+          whatsapp?: string | null
+          year?: string | null
+        }
+        Update: {
+          budget?: string | null
+          college?: string | null
+          created_at?: string
+          gender_preference?: string | null
+          id?: string
+          listing_id?: string | null
+          move_in_date?: string | null
+          name?: string | null
+          whatsapp?: string | null
+          year?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_interests_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
     }
     Views: {
-      approved_listings_public: {
-        Row: {
-          ac: string | null
-          area_description: string | null
-          atm: string | null
-          auto_cost: number | null
-          breakfast_menu: string | null
-          breakfast_time: string | null
-          college: string | null
-          cook_cost: string | null
-          created_at: string | null
-          curfew: string | null
-          deposit: number | null
-          dinner_menu: string | null
-          dinner_time: string | null
-          electricity: string | null
-          electricity_cost: string | null
-          food_type: string | null
-          gender: string | null
-          gym_distance: string | null
-          gym_name: string | null
-          gym_price: number | null
-          hospital: string | null
-          id: string | null
-          jogging: string | null
-          laundry: string | null
-          laundry_cost: string | null
-          locality: string | null
-          lunch_menu: string | null
-          lunch_time: string | null
-          maid_cost: string | null
-          market: string | null
-          metro_fare: number | null
-          metro_station: string | null
-          metro_walk_min: number | null
-          name: string | null
-          negotiable: string | null
-          notes: string | null
-          pharmacy: string | null
-          rent: number | null
-          security: string[] | null
-          sharers: number | null
-          status: string | null
-          type: string | null
-          walk_min: number | null
-          water: string | null
-          wifi: string | null
-        }
-        Insert: {
-          ac?: string | null
-          area_description?: string | null
-          atm?: string | null
-          auto_cost?: number | null
-          breakfast_menu?: string | null
-          breakfast_time?: string | null
-          college?: string | null
-          cook_cost?: string | null
-          created_at?: string | null
-          curfew?: string | null
-          deposit?: number | null
-          dinner_menu?: string | null
-          dinner_time?: string | null
-          electricity?: string | null
-          electricity_cost?: string | null
-          food_type?: string | null
-          gender?: string | null
-          gym_distance?: string | null
-          gym_name?: string | null
-          gym_price?: number | null
-          hospital?: string | null
-          id?: string | null
-          jogging?: string | null
-          laundry?: string | null
-          laundry_cost?: string | null
-          locality?: string | null
-          lunch_menu?: string | null
-          lunch_time?: string | null
-          maid_cost?: string | null
-          market?: string | null
-          metro_fare?: number | null
-          metro_station?: string | null
-          metro_walk_min?: number | null
-          name?: string | null
-          negotiable?: string | null
-          notes?: string | null
-          pharmacy?: string | null
-          rent?: number | null
-          security?: string[] | null
-          sharers?: number | null
-          status?: string | null
-          type?: string | null
-          walk_min?: number | null
-          water?: string | null
-          wifi?: string | null
-        }
-        Update: {
-          ac?: string | null
-          area_description?: string | null
-          atm?: string | null
-          auto_cost?: number | null
-          breakfast_menu?: string | null
-          breakfast_time?: string | null
-          college?: string | null
-          cook_cost?: string | null
-          created_at?: string | null
-          curfew?: string | null
-          deposit?: number | null
-          dinner_menu?: string | null
-          dinner_time?: string | null
-          electricity?: string | null
-          electricity_cost?: string | null
-          food_type?: string | null
-          gender?: string | null
-          gym_distance?: string | null
-          gym_name?: string | null
-          gym_price?: number | null
-          hospital?: string | null
-          id?: string | null
-          jogging?: string | null
-          laundry?: string | null
-          laundry_cost?: string | null
-          locality?: string | null
-          lunch_menu?: string | null
-          lunch_time?: string | null
-          maid_cost?: string | null
-          market?: string | null
-          metro_fare?: number | null
-          metro_station?: string | null
-          metro_walk_min?: number | null
-          name?: string | null
-          negotiable?: string | null
-          notes?: string | null
-          pharmacy?: string | null
-          rent?: number | null
-          security?: string[] | null
-          sharers?: number | null
-          status?: string | null
-          type?: string | null
-          walk_min?: number | null
-          water?: string | null
-          wifi?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "owner" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -445,6 +549,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "owner", "user"],
+    },
   },
 } as const

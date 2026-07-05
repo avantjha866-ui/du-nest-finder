@@ -43,8 +43,9 @@ export const Route = createFileRoute("/api/webhooks/telegram-callback")({
         }
 
         const { createClient } = await import("@supabase/supabase-js");
+        const { DUNEST_SUPABASE_URL } = await import("@/lib/directSupabase");
         const adminClient = createClient(
-          process.env.SUPABASE_URL ?? directSupabase.supabaseUrl,
+          process.env.SUPABASE_URL ?? DUNEST_SUPABASE_URL,
           serviceKey,
           { auth: { persistSession: false } }
         );

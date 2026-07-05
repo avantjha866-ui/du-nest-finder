@@ -131,6 +131,12 @@ export type Listing = {
   reviewsNote?: string;
   whatsapp?: string;
   photos?: string[];
+  // HomeWise additions
+  featured?: boolean;
+  roomPrices?: { single?: number; double?: number; triple?: number };
+  perPerson?: { two?: number; three?: number; four?: number };
+  totalRent?: number;
+  flatType?: string;
 };
 
 export const FILTER_CHIPS = [
