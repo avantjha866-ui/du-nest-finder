@@ -12,14 +12,20 @@ export function Nav() {
 
   return (
     <header className="sticky top-0 z-50 bg-navy/95 backdrop-blur border-b border-white/5">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-2xl tracking-tight font-tagline">
-          <span className="w-8 h-8 rounded-lg bg-brand-orange text-white flex items-center justify-center">
-            <Home size={16} />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <Link to="/" className="flex flex-col leading-none">
+          <span className="flex items-baseline text-2xl font-tagline">
+            <span className="text-brand-orange">Home</span>
+            <span className="text-brand-cream">Wise</span>
           </span>
-          <span className="text-white">Home</span>
-          <span className="text-brand-orange -ml-2">Wise</span>
+          <span
+            className="mt-1 text-brand-cream font-semibold"
+            style={{ fontSize: "10px", letterSpacing: "3px" }}
+          >
+            RIGHT PLACE. RIGHT START.
+          </span>
         </Link>
+
 
         <nav className="hidden md:flex items-center gap-8">
           <Link to="/listings" className={linkClass} activeProps={activeProps}>
