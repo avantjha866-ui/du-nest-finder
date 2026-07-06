@@ -31,35 +31,41 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* HomeWise palette */
+  /* HomeWise palette (logo-matched) */
   --color-navy: var(--navy);
   --color-navy-light: var(--navy-light);
+  --color-navy-dark: var(--navy-dark);
   --color-navy-soft: var(--navy-soft);
   --color-brand-orange: var(--brand-orange);
   --color-brand-orange-dark: var(--brand-orange-dark);
   --color-brand-blue: var(--brand-blue);
   --color-brand-cream: var(--brand-cream);
   --color-brand-gold: var(--brand-gold);
-  --color-brand-green: var(--brand-orange);
-  --color-brand-green-dark: var(--brand-orange-dark);
+  --color-brand-olive: var(--brand-olive);
+  --color-brand-green: var(--brand-olive);
+  --color-brand-green-dark: var(--brand-olive);
   --color-amber-soft: var(--brand-gold);
+  --color-cream-section: var(--cream-section);
 
-  --font-display: "Montserrat", "Inter", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Montserrat", system-ui, sans-serif;
+  --font-sans: "Montserrat", system-ui, sans-serif;
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.625rem;
 
-  /* HomeWise brand */
+  /* HomeWise brand — logo exact */
   --navy: #0a1628;
-  --navy-light: #142338;
-  --navy-soft: #f4f6fa;
+  --navy-light: #0f2035;
+  --navy-dark: #070f1e;
+  --navy-soft: #f8f4ee;
   --brand-orange: #d94f2b;
-  --brand-orange-dark: #b03d1e;
+  --brand-orange-dark: #c44b2b;
   --brand-blue: #1e5a8a;
   --brand-cream: #e8dcc8;
   --brand-gold: #c9a84c;
+  --brand-olive: #5a6b2a;
+  --cream-section: #f8f4ee;
 
   --background: #ffffff;
   --foreground: #0a1628;
@@ -69,27 +75,27 @@
   --popover-foreground: #0a1628;
   --primary: #d94f2b;
   --primary-foreground: #ffffff;
-  --secondary: #f4f6fa;
+  --secondary: #f8f4ee;
   --secondary-foreground: #0a1628;
-  --muted: #f4f6fa;
+  --muted: #f8f4ee;
   --muted-foreground: #5b6779;
-  --accent: #fbeee5;
-  --accent-foreground: #b03d1e;
-  --destructive: #dc2626;
+  --accent: #fff3ee;
+  --accent-foreground: #c44b2b;
+  --destructive: #c44b2b;
   --destructive-foreground: #ffffff;
-  --border: #e5e7ef;
-  --input: #e5e7ef;
+  --border: #e2ddd6;
+  --input: #e2ddd6;
   --ring: #d94f2b;
 }
 
 .dark {
   --background: #0a1628;
-  --foreground: #ffffff;
-  --card: #142338;
-  --card-foreground: #ffffff;
+  --foreground: #e8dcc8;
+  --card: #0f2035;
+  --card-foreground: #e8dcc8;
   --primary: #d94f2b;
   --primary-foreground: #ffffff;
-  --border: rgba(255, 255, 255, 0.1);
+  --border: rgba(232, 220, 200, 0.08);
 }
 
 @layer base {
@@ -106,7 +112,34 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
+    font-weight: 800;
     letter-spacing: -0.01em;
+  }
+
+  a, button {
+    transition: all 0.2s ease;
+  }
+
+  *:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(217, 79, 43, 0.35);
+    border-radius: 6px;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0f2035;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d94f2b;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #c44b2b;
   }
 }
 
@@ -118,7 +151,18 @@
 
 @utility hero-grid-bg {
   background-image:
-    radial-gradient(circle at 20% 10%, rgba(217, 79, 43, 0.20), transparent 45%),
+    radial-gradient(circle at 20% 10%, rgba(217, 79, 43, 0.22), transparent 45%),
     radial-gradient(circle at 80% 60%, rgba(30, 90, 138, 0.18), transparent 50%),
-    linear-gradient(180deg, #0a1628 0%, #071120 100%);
+    linear-gradient(180deg, #0a1628 0%, #070f1e 100%);
+}
+
+@utility shimmer {
+  background: linear-gradient(90deg, #0f2035 0%, #142645 50%, #0f2035 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
