@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useCompareList } from "@/lib/store";
 import { useState } from "react";
-import { Menu, X, Home } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 export function Nav() {
   const { ids } = useCompareList();
