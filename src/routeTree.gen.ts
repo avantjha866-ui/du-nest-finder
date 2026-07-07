@@ -16,6 +16,7 @@ import { Route as CompareRouteImport } from './routes/compare'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as ListingsIdRouteImport } from './routes/listings.$id'
 import { Route as AdminReviewRouteImport } from './routes/admin.review'
 import { Route as ApiWebhooksTelegramCallbackRouteImport } from './routes/api/webhooks/telegram-callback'
 import { Route as ApiWebhooksListingSubmittedRouteImport } from './routes/api/webhooks/listing-submitted'
@@ -56,6 +57,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const ListingsIdRoute = ListingsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ListingsRoute,
+} as any)
 const AdminReviewRoute = AdminReviewRouteImport.update({
   id: '/review',
   path: '/review',
@@ -85,9 +91,10 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/compare': typeof CompareRoute
   '/list-your-property': typeof ListYourPropertyRoute
-  '/listings': typeof ListingsRoute
+  '/listings': typeof ListingsRouteWithChildren
   '/submit': typeof SubmitRoute
   '/admin/review': typeof AdminReviewRoute
+  '/listings/$id': typeof ListingsIdRoute
   '/admin/': typeof AdminIndexRoute
   '/api/webhooks/listing-submitted': typeof ApiWebhooksListingSubmittedRoute
   '/api/webhooks/telegram-callback': typeof ApiWebhooksTelegramCallbackRoute
@@ -97,9 +104,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
   '/list-your-property': typeof ListYourPropertyRoute
-  '/listings': typeof ListingsRoute
+  '/listings': typeof ListingsRouteWithChildren
   '/submit': typeof SubmitRoute
   '/admin/review': typeof AdminReviewRoute
+  '/listings/$id': typeof ListingsIdRoute
   '/admin': typeof AdminIndexRoute
   '/api/webhooks/listing-submitted': typeof ApiWebhooksListingSubmittedRoute
   '/api/webhooks/telegram-callback': typeof ApiWebhooksTelegramCallbackRoute
@@ -111,9 +119,10 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/compare': typeof CompareRoute
   '/list-your-property': typeof ListYourPropertyRoute
-  '/listings': typeof ListingsRoute
+  '/listings': typeof ListingsRouteWithChildren
   '/submit': typeof SubmitRoute
   '/admin/review': typeof AdminReviewRoute
+  '/listings/$id': typeof ListingsIdRoute
   '/admin/': typeof AdminIndexRoute
   '/api/webhooks/listing-submitted': typeof ApiWebhooksListingSubmittedRoute
   '/api/webhooks/telegram-callback': typeof ApiWebhooksTelegramCallbackRoute
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/listings'
     | '/submit'
     | '/admin/review'
+    | '/listings/$id'
     | '/admin/'
     | '/api/webhooks/listing-submitted'
     | '/api/webhooks/telegram-callback'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/listings'
     | '/submit'
     | '/admin/review'
+    | '/listings/$id'
     | '/admin'
     | '/api/webhooks/listing-submitted'
     | '/api/webhooks/telegram-callback'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/listings'
     | '/submit'
     | '/admin/review'
+    | '/listings/$id'
     | '/admin/'
     | '/api/webhooks/listing-submitted'
     | '/api/webhooks/telegram-callback'
@@ -165,7 +177,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   CompareRoute: typeof CompareRoute
   ListYourPropertyRoute: typeof ListYourPropertyRoute
-  ListingsRoute: typeof ListingsRoute
+  ListingsRoute: typeof ListingsRouteWithChildren
   SubmitRoute: typeof SubmitRoute
   ApiWebhooksListingSubmittedRoute: typeof ApiWebhooksListingSubmittedRoute
   ApiWebhooksTelegramCallbackRoute: typeof ApiWebhooksTelegramCallbackRoute
@@ -223,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/listings/$id': {
+      id: '/listings/$id'
+      path: '/$id'
+      fullPath: '/listings/$id'
+      preLoaderRoute: typeof ListingsIdRouteImport
+      parentRoute: typeof ListingsRoute
+    }
     '/admin/review': {
       id: '/admin/review'
       path: '/review'
@@ -266,12 +285,24 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface ListingsRouteChildren {
+  ListingsIdRoute: typeof ListingsIdRoute
+}
+
+const ListingsRouteChildren: ListingsRouteChildren = {
+  ListingsIdRoute: ListingsIdRoute,
+}
+
+const ListingsRouteWithChildren = ListingsRoute._addFileChildren(
+  ListingsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   CompareRoute: CompareRoute,
   ListYourPropertyRoute: ListYourPropertyRoute,
-  ListingsRoute: ListingsRoute,
+  ListingsRoute: ListingsRouteWithChildren,
   SubmitRoute: SubmitRoute,
   ApiWebhooksListingSubmittedRoute: ApiWebhooksListingSubmittedRoute,
   ApiWebhooksTelegramCallbackRoute: ApiWebhooksTelegramCallbackRoute,
