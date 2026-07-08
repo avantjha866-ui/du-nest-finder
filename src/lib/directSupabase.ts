@@ -66,6 +66,9 @@ export type DirectListingRow = {
   photos: string[] | null;
 
   is_featured: boolean | null;
+
+  owner_name: string | null;
+  owner_whatsapp: string | null;
 };
 
 export const directSupabase = createClient(DUNEST_SUPABASE_URL, DUNEST_SUPABASE_ANON_KEY, {
