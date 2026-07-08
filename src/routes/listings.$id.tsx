@@ -131,7 +131,11 @@ function ListingDetail() {
   };
 
   const openContact = () => {
-    window.open(`/api/public/contact/${l.id}`, "_blank", "noopener");
+    const digits = (l.owner_whatsapp ?? "").replace(/\D/g, "");
+    if (!digits) { toast.error("Owner contact not available for this listing."); return; }
+    const number = digits.startsWith("91") ? digits : `91${digits}`;
+    const msg = encodeURIComponent(`Hi ${l.owner_name || "there"}, I found your listing "${l.name}" on HomeWise. I'm interested — can we talk?`);
+    window.open(`https://wa.me/${number}?text=${msg}`, "_blank");
   };
 
   return (
