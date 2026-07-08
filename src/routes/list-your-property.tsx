@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { directSupabase } from "@/lib/directSupabase";
 import { CheckCircle2, ArrowLeft, ArrowRight, Camera } from "lucide-react";
 import { toast } from "sonner";
@@ -798,5 +798,3 @@ function OptionCard({ active, onClick, icon, title, subtitle }: { active: boolea
   );
 }
 
-/* silence unused-import warnings if any */
-export const __unused = { useMemo };
