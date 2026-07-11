@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { directSupabase } from "@/lib/directSupabase";
+import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, ArrowLeft, ArrowRight, Camera } from "lucide-react";
 import { toast } from "sonner";
 
