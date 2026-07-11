@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { directSupabase } from "@/lib/directSupabase";
+import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, ArrowLeft, ArrowRight, Camera } from "lucide-react";
 import { toast } from "sonner";
 
@@ -250,11 +250,23 @@ function ListYourPropertyPage() {
         owner_email: form.owner_email.trim(),
         owner_alternate_phone: form.owner_alternate_phone.replace(/\D/g, "") || null,
       };
-      const { error } = await directSupabase.from("listings").insert(payload);
-      if (error) throw error;
+      console.log("[submit] inserting listing payload:", payload);
+      const { data: inserted, error } = await supabase
+        .from("listings")
+        .insert(payload as never)
+        .select("id, status")
+        .single();
+      if (error) {
+        console.error("[submit] Supabase insert error:", error);
+        const detail = [error.message, error.details, error.hint].filter(Boolean).join(" — ");
+        toast.error(`Supabase: ${detail || "Unknown error"}`);
+        return;
+      }
+      console.log("[submit] inserted row:", inserted);
       setSubmitted({ name: form.name, owner: form.owner_name });
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
+      console.error("[submit] unexpected error:", err);
       toast.error(err instanceof Error ? `Could not submit: ${err.message}` : "Could not submit listing.");
     } finally {
       setSaving(false);
