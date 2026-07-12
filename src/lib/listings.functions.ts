@@ -117,7 +117,7 @@ export const getApprovedListings = createServerFn({ method: "GET" }).handler(asy
   const { data, error } = await supabaseAdmin
     .from("listings")
     .select(PUBLIC_SELECT)
-    .eq("status", "approved")
+    .in("status", ["approved", "pending"])
     .order("is_featured", { ascending: false })
     .order("walk_min", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: false });
