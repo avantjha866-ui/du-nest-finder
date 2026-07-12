@@ -452,7 +452,7 @@ function Step1({ form, upd }: { form: FormState; upd: <K extends keyof FormState
 
       <Field label="Gender policy *">
         <div className="flex flex-wrap gap-2">
-          {[{ v: "girls only", l: "👩 Girls only" }, { v: "boys only", l: "👨 Boys only" }, { v: "co-ed", l: "🤝 Co-ed" }].map((o) => (
+          {[{ v: "girls", l: "👩 Girls only" }, { v: "boys", l: "👨 Boys only" }, { v: "coed", l: "🤝 Co-ed" }].map((o) => (
             <Chip key={o.v} active={form.gender === o.v} onClick={() => upd("gender", o.v)}>{o.l}</Chip>
           ))}
         </div>
