@@ -13,7 +13,6 @@ export const getListingById = createServerFn({ method: "GET" })
       .from("listings")
       .select(PUBLIC_SELECT)
       .eq("id", data.id)
-      .eq("status", "approved")
       .maybeSingle();
     if (error) throw new Error("Failed to load listing.");
     return (row ?? null) as unknown as DirectListingRow | null;
