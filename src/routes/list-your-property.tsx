@@ -255,32 +255,27 @@ function ListYourPropertyPage() {
       };
       // Insert listing first to get the ID
       const listingId = crypto.randomUUID();
+
+      // Upload photos first so we can include URLs in the insert
+      const uploadedUrls: string[] = [];
+      for (const file of form.photoFiles) {
+        const ext = file.name.split(".").pop() ?? "jpg";
+        const path = `listings/${listingId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { error: uploadErr } = await supabase.storage.from("listing-photos").upload(path, file, { upsert: false });
+        if (!uploadErr) {
+          const { data: urlData } = supabase.storage.from("listing-photos").getPublicUrl(path);
+          if (urlData?.publicUrl) uploadedUrls.push(urlData.publicUrl);
+        }
+      }
+
       const { error } = await supabase
         .from("listings")
-        .insert({ ...payload, id: listingId } as never);
+        .insert({ ...payload, id: listingId, photos: uploadedUrls.length > 0 ? uploadedUrls : null } as never);
       if (error) {
         console.error("[submit] Supabase insert error:", error);
         const detail = [error.message, error.details, error.hint].filter(Boolean).join(" — ");
         toast.error(`Supabase: ${detail || "Unknown error"}`);
         return;
-      }
-      const inserted = { id: listingId };
-
-      // Upload photos if any
-      if (form.photoFiles.length > 0 && inserted?.id) {
-        const uploadedUrls: string[] = [];
-        for (const file of form.photoFiles) {
-          const ext = file.name.split(".").pop() ?? "jpg";
-          const path = `listings/${inserted.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-          const { error: uploadErr } = await supabase.storage.from("listing-photos").upload(path, file, { upsert: false });
-          if (!uploadErr) {
-            const { data: urlData } = supabase.storage.from("listing-photos").getPublicUrl(path);
-            if (urlData?.publicUrl) uploadedUrls.push(urlData.publicUrl);
-          }
-        }
-        if (uploadedUrls.length > 0) {
-          await supabase.from("listings").update({ photos: uploadedUrls }).eq("id", inserted.id);
-        }
       }
 
       setSubmitted({ name: form.name, owner: form.owner_name });
