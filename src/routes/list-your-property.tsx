@@ -95,7 +95,7 @@ type FormState = {
 
 const initialForm: FormState = {
   type: "pg", name: "", address: "", locality: "", college: DU_COLLEGES[0],
-  gender: "", curfew: "", noCurfew: false, ac: "", available_from: new Date().toISOString().slice(0, 10),
+  gender: "", curfew: "", noCurfew: false, ac: "", available_from: "",
   has_single: false, price_single: "",
   has_double: false, price_double: "",
   has_triple: false, price_triple: "",
@@ -254,17 +254,17 @@ function ListYourPropertyPage() {
         owner_alternate_phone: form.owner_alternate_phone.replace(/\D/g, "") || null,
       };
       // Insert listing first to get the ID
-      const { data: inserted, error } = await supabase
+      const listingId = crypto.randomUUID();
+      const { error } = await supabase
         .from("listings")
-        .insert(payload as never)
-        .select("id, status")
-        .single();
+        .insert({ ...payload, id: listingId } as never);
       if (error) {
         console.error("[submit] Supabase insert error:", error);
         const detail = [error.message, error.details, error.hint].filter(Boolean).join(" — ");
         toast.error(`Supabase: ${detail || "Unknown error"}`);
         return;
       }
+      const inserted = { id: listingId };
 
       // Upload photos if any
       if (form.photoFiles.length > 0 && inserted?.id) {
