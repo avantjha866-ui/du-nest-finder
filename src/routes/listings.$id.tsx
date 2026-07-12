@@ -496,7 +496,10 @@ function ContactCard({
   billsIncluded: boolean; availableFrom: string | null; createdAt: string | null; isFlat: boolean;
   onChangeRoom: () => void;
 }) {
-  const daysListed = createdAt ? Math.max(1, Math.floor((Date.now() - new Date(createdAt).getTime()) / 86400000)) : null;
+  const [daysListed, setDaysListed] = useState<number | null>(null);
+  useEffect(() => {
+    if (createdAt) setDaysListed(Math.max(1, Math.floor((Date.now() - new Date(createdAt).getTime()) / 86400000)));
+  }, [createdAt]);
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(10,22,40,0.15)]">
       <div className="h-1 bg-brand-orange" />

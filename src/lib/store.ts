@@ -1,23 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
 
 function useLocalStorage<T>(key: string, initial: T) {
-  const [value, setValue] = useState<T>(() => {
-    if (typeof window === "undefined") return initial;
+  const [value, setValue] = useState<T>(initial);
+
+  // Hydrate from localStorage after mount to avoid SSR mismatch
+  useEffect(() => {
     try {
       const raw = localStorage.getItem(key);
-      return raw ? (JSON.parse(raw) as T) : initial;
-    } catch {
-      return initial;
-    }
-  });
+      if (raw) setValue(JSON.parse(raw) as T);
+    } catch { /* ignore */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
     try {
       localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      // ignore
-    }
+    } catch { /* ignore */ }
   }, [key, value]);
 
   return [value, setValue] as const;
