@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Nav, Footer } from "@/components/Nav";
+import { RoommateChat } from "@/components/RoommateChat";
 import { Toaster } from "sonner";
 
 function NotFoundComponent() {
@@ -140,6 +141,7 @@ function RootComponent() {
         <Outlet />
       </main>
       <Footer />
+      <RoommateChat />
       <Toaster richColors position="top-center" />
     </QueryClientProvider>
   );

@@ -12,7 +12,18 @@ const listingsQueryOptions = queryOptions({
 });
 
 function CompareError({ error }: { error: Error }) {
-  return <div role="alert" className="p-8 text-center text-destructive">{error.message}</div>;
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center px-4">
+      <div className="text-center max-w-md">
+        <div className="text-4xl mb-4">⚠️</div>
+        <h2 className="text-xl font-bold text-navy">Could not load listings</h2>
+        <p className="mt-2 text-muted-foreground text-sm">{error.message}</p>
+        <Link to="/" className="mt-6 inline-block bg-brand-orange text-white font-bold px-6 py-3 rounded-xl">
+          Go home
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 function CompareNotFound() {

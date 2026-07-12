@@ -13,17 +13,8 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-50 bg-navy/95 backdrop-blur border-b border-white/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <Link to="/" className="flex flex-col leading-none">
-          <span className="flex items-baseline text-2xl font-tagline">
-            <span className="text-brand-orange">Home</span>
-            <span className="text-brand-cream">Wise</span>
-          </span>
-          <span
-            className="mt-1 text-brand-cream font-semibold"
-            style={{ fontSize: "10px", letterSpacing: "3px" }}
-          >
-            RIGHT PLACE. RIGHT START.
-          </span>
+        <Link to="/" className="flex items-center">
+          <img src="/logo.png" alt="DU Nest" className="h-12 w-auto" />
         </Link>
 
 
@@ -81,11 +72,11 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-12 flex flex-col md:flex-row gap-8 justify-between">
         <div>
           <div className="text-xl font-tagline flex items-baseline">
-            <span className="text-brand-orange">Home</span>
-            <span className="text-brand-cream">Wise</span>
+            <span className="text-brand-orange">DU</span>
+            <span className="text-brand-cream">Nest</span>
           </div>
           <p className="text-brand-cream/60 mt-1 font-semibold" style={{ fontSize: "10px", letterSpacing: "3px" }}>
-            RIGHT PLACE. RIGHT START.
+            FIND YOUR PLACE AT DU
           </p>
           <p className="text-sm mt-4 max-w-sm">
             Built for Delhi University students. Every listing verified before it goes live.
@@ -105,10 +96,16 @@ export function Footer() {
               <Link to="/submit" className="text-sm hover:text-brand-orange transition-colors">List your property</Link>
             </div>
           </div>
+          <div>
+            <div className="text-xs font-bold uppercase tracking-wider text-brand-orange mb-3">Legal</div>
+            <div className="flex flex-col gap-2">
+              <Link to="/terms" className="text-sm hover:text-brand-orange transition-colors">Terms &amp; Conditions</Link>
+            </div>
+          </div>
         </div>
       </div>
       <div className="border-t px-6 py-4" style={{ borderTopColor: "rgba(217,79,43,0.15)" }}>
-        <p className="text-xs text-center text-brand-cream/40">© {new Date().getFullYear()} HomeWise. Made for Delhi University students.</p>
+        <p className="text-xs text-center text-brand-cream/40">© 2025 DU Nest. Made for Delhi University students.</p>
       </div>
     </footer>
 

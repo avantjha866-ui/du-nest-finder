@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle2, ArrowLeft, ArrowRight, Camera } from "lucide-react";
+import { CheckCircle2, ArrowLeft, ArrowRight, Camera, X, Upload, Clock, CheckCheck, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/list-your-property")({
@@ -89,6 +89,8 @@ type FormState = {
   best_call_time: string;
   notes: string;
   terms: boolean;
+  photos: string[];
+  photoFiles: File[];
 };
 
 const initialForm: FormState = {
@@ -115,6 +117,7 @@ const initialForm: FormState = {
   jogging_spot: "", area_description: "",
   owner_name: "", owner_whatsapp: "", owner_email: "", owner_alternate_phone: "",
   best_call_time: "", notes: "", terms: false,
+  photos: [], photoFiles: [],
 };
 
 const toInt = (v: string): number | null => {
@@ -250,7 +253,7 @@ function ListYourPropertyPage() {
         owner_email: form.owner_email.trim(),
         owner_alternate_phone: form.owner_alternate_phone.replace(/\D/g, "") || null,
       };
-      console.log("[submit] inserting listing payload:", payload);
+      // Insert listing first to get the ID
       const { data: inserted, error } = await supabase
         .from("listings")
         .insert(payload as never)
@@ -262,7 +265,24 @@ function ListYourPropertyPage() {
         toast.error(`Supabase: ${detail || "Unknown error"}`);
         return;
       }
-      console.log("[submit] inserted row:", inserted);
+
+      // Upload photos if any
+      if (form.photoFiles.length > 0 && inserted?.id) {
+        const uploadedUrls: string[] = [];
+        for (const file of form.photoFiles) {
+          const ext = file.name.split(".").pop() ?? "jpg";
+          const path = `listings/${inserted.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+          const { error: uploadErr } = await supabase.storage.from("listing-photos").upload(path, file, { upsert: false });
+          if (!uploadErr) {
+            const { data: urlData } = supabase.storage.from("listing-photos").getPublicUrl(path);
+            if (urlData?.publicUrl) uploadedUrls.push(urlData.publicUrl);
+          }
+        }
+        if (uploadedUrls.length > 0) {
+          await supabase.from("listings").update({ photos: uploadedUrls }).eq("id", inserted.id);
+        }
+      }
+
       setSubmitted({ name: form.name, owner: form.owner_name });
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
@@ -285,14 +305,24 @@ function ListYourPropertyPage() {
             Thank you {submitted.owner}! We've received your listing for <span className="text-brand-cream font-semibold">{submitted.name}</span>.
             Our team will review it within 24 hours and contact you on WhatsApp if we need anything.
           </p>
-          <div className="mt-6 bg-white rounded-2xl p-5 text-left">
+          <div className="mt-6 bg-white rounded-2xl p-5 text-left space-y-4">
             <div className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Submission summary</div>
-            <div className="mt-3 space-y-1 text-sm text-navy">
+            <div className="space-y-1 text-sm text-navy">
               <div><span className="text-muted-foreground">Property:</span> <b>{submitted.name}</b></div>
               <div><span className="text-muted-foreground">Type:</span> <b>{form.type === "pg" ? "PG" : "Flat"}</b></div>
               <div><span className="text-muted-foreground">Locality:</span> <b>{form.locality}</b></div>
               <div><span className="text-muted-foreground">College:</span> <b>{form.college}</b></div>
               <div><span className="text-muted-foreground">Status:</span> <span className="inline-flex items-center gap-1 font-bold" style={{ color: "#c9a84c" }}>🟡 Pending Review</span></div>
+            </div>
+            {/* Approval flow */}
+            <div className="border-t border-border pt-4">
+              <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">What happens next?</div>
+              <div className="space-y-2">
+                <ApprovalStep icon={<CheckCheck size={14} />} color="#5a6b2a" label="Submitted" desc="Your listing is in our queue" done />
+                <ApprovalStep icon={<Clock size={14} />} color="#c9a84c" label="Under Review" desc="Our team verifies details within 24 hrs" active />
+                <ApprovalStep icon={<AlertCircle size={14} />} color="#1e5a8a" label="Verification Call" desc="We may WhatsApp you for photos or clarification" />
+                <ApprovalStep icon={<CheckCircle2 size={14} />} color="#d94f2b" label="Goes Live" desc="Listing published — students can find you!" />
+              </div>
             </div>
           </div>
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
@@ -726,19 +756,77 @@ function Step5({ form, upd }: { form: FormState; upd: <K extends keyof FormState
         />
       </Field>
 
-      <div className="rounded-xl p-6 text-center" style={{ backgroundColor: "#f8f4ee", border: "2px dashed #d94f2b" }}>
-        <Camera size={40} className="mx-auto text-brand-orange" />
-        <div className="mt-2 font-bold text-navy">Photo upload — coming soon</div>
-        <div className="text-xs text-muted-foreground mt-1">You can submit now — our team will collect photos with you on WhatsApp.</div>
-      </div>
+      <PhotoUpload photos={form.photos} photoFiles={form.photoFiles} onUpdate={(photos, photoFiles) => { upd("photos", photos); upd("photoFiles", photoFiles); }} />
 
       <label className="flex items-start gap-3 cursor-pointer">
         <input type="checkbox" checked={form.terms} onChange={(e) => upd("terms", e.target.checked)} className="mt-1" />
         <span className="text-sm text-navy">
-          I confirm all information provided is accurate and I agree to HomeWise Terms &amp; Conditions.
+          I confirm all information provided is accurate and I agree to DU Nest{" "}
+          <a href="/terms" target="_blank" className="text-brand-orange underline">Terms &amp; Conditions</a>.
           I understand fake or misleading listings will be permanently removed.
         </span>
       </label>
+    </div>
+  );
+}
+
+function PhotoUpload({ photos, photoFiles, onUpdate }: {
+  photos: string[];
+  photoFiles: File[];
+  onUpdate: (photos: string[], photoFiles: File[]) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFiles = (files: FileList | null) => {
+    if (!files) return;
+    const newFiles = Array.from(files).filter((f) => f.type.startsWith("image/")).slice(0, 10 - photoFiles.length);
+    if (newFiles.length === 0) return;
+    const newPreviews = newFiles.map((f) => URL.createObjectURL(f));
+    onUpdate([...photos, ...newPreviews], [...photoFiles, ...newFiles]);
+  };
+
+  const remove = (i: number) => {
+    const newPhotos = photos.filter((_, idx) => idx !== i);
+    const newFiles = photoFiles.filter((_, idx) => idx !== i);
+    onUpdate(newPhotos, newFiles);
+  };
+
+  return (
+    <div className="space-y-3">
+      <SectionTitle title="Property Photos" subtitle="Upload up to 10 photos — more photos = more enquiries" />
+      <div className="grid grid-cols-3 gap-2">
+        {photos.map((src, i) => (
+          <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-border">
+            <img src={src} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+            <button
+              type="button"
+              onClick={() => remove(i)}
+              className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80"
+            >
+              <X size={12} />
+            </button>
+          </div>
+        ))}
+        {photos.length < 10 && (
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="aspect-square rounded-xl border-2 border-dashed border-brand-orange/40 flex flex-col items-center justify-center gap-1 hover:border-brand-orange hover:bg-[#fff3ee] transition-colors"
+          >
+            <Upload size={20} className="text-brand-orange" />
+            <span className="text-[10px] font-bold text-brand-orange">Add Photo</span>
+          </button>
+        )}
+      </div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        onChange={(e) => handleFiles(e.target.files)}
+      />
+      <p className="text-xs text-muted-foreground">JPG, PNG, WEBP · Max 5MB each · First photo will be the cover image</p>
     </div>
   );
 }
@@ -807,6 +895,22 @@ function OptionCard({ active, onClick, icon, title, subtitle }: { active: boolea
       <div className="mt-1 font-bold text-navy text-sm">{title}</div>
       {subtitle && <div className="text-xs text-muted-foreground">{subtitle}</div>}
     </button>
+  );
+}
+
+function ApprovalStep({ icon, color, label, desc, done, active }: {
+  icon: React.ReactNode; color: string; label: string; desc: string; done?: boolean; active?: boolean;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: done || active ? color : "#e2ddd6" }}>
+        {icon}
+      </div>
+      <div>
+        <div className={`text-sm font-bold ${done || active ? "text-navy" : "text-muted-foreground"}`}>{label}</div>
+        <div className="text-xs text-muted-foreground">{desc}</div>
+      </div>
+    </div>
   );
 }
 

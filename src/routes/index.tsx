@@ -8,13 +8,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HomeWise — Find verified PGs & Flats near Delhi University" },
+      { title: "DU Nest — Find verified PGs & Flats near Delhi University" },
       {
         name: "description",
         content:
           "Search by college, budget and gender preference. Every listing shows walk time, food, metro cost and full monthly expenses.",
       },
-      { property: "og:title", content: "HomeWise — PGs & Flats near Delhi University" },
+      { property: "og:title", content: "DU Nest — PGs & Flats near Delhi University" },
       { property: "og:description", content: "The smart way for DU students to find housing." },
     ],
   }),
@@ -66,7 +66,7 @@ function Home() {
               For Delhi University students
             </span>
             <h1 className="mt-6 text-4xl sm:text-6xl font-tagline" style={{ color: "var(--brand-cream)" }}>
-              Find your <span className="text-brand-orange">HomeWise</span> near DU
+              Find your <span className="text-brand-orange">DU Nest</span> near campus
             </h1>
             <p className="mt-5 text-base sm:text-lg text-white/70 max-w-2xl mx-auto">
               Search by college, budget and gender. See real walk time, food schedule, metro cost
@@ -107,7 +107,7 @@ function Home() {
               className="mt-4 w-full bg-brand-orange hover:bg-brand-orange-dark transition-colors text-white font-semibold py-4 rounded-xl text-base inline-flex items-center justify-center gap-2"
             >
               <Search size={18} />
-              Find My HomeWise
+              Find My DU Nest
             </button>
           </div>
         </div>

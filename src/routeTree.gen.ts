@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as ListingsRouteImport } from './routes/listings'
 import { Route as ListYourPropertyRouteImport } from './routes/list-your-property'
@@ -22,6 +23,11 @@ import { Route as ApiWebhooksTelegramCallbackRouteImport } from './routes/api/we
 import { Route as ApiWebhooksListingSubmittedRouteImport } from './routes/api/webhooks/listing-submitted'
 import { Route as ApiPublicContactListingIdRouteImport } from './routes/api/public/contact.$listingId'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SubmitRoute = SubmitRouteImport.update({
   id: '/submit',
   path: '/submit',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/list-your-property': typeof ListYourPropertyRoute
   '/listings': typeof ListingsRouteWithChildren
   '/submit': typeof SubmitRoute
+  '/terms': typeof TermsRoute
   '/admin/review': typeof AdminReviewRoute
   '/listings/$id': typeof ListingsIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/list-your-property': typeof ListYourPropertyRoute
   '/listings': typeof ListingsRouteWithChildren
   '/submit': typeof SubmitRoute
+  '/terms': typeof TermsRoute
   '/admin/review': typeof AdminReviewRoute
   '/listings/$id': typeof ListingsIdRoute
   '/admin': typeof AdminIndexRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/list-your-property': typeof ListYourPropertyRoute
   '/listings': typeof ListingsRouteWithChildren
   '/submit': typeof SubmitRoute
+  '/terms': typeof TermsRoute
   '/admin/review': typeof AdminReviewRoute
   '/listings/$id': typeof ListingsIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/list-your-property'
     | '/listings'
     | '/submit'
+    | '/terms'
     | '/admin/review'
     | '/listings/$id'
     | '/admin/'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/list-your-property'
     | '/listings'
     | '/submit'
+    | '/terms'
     | '/admin/review'
     | '/listings/$id'
     | '/admin'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/list-your-property'
     | '/listings'
     | '/submit'
+    | '/terms'
     | '/admin/review'
     | '/listings/$id'
     | '/admin/'
@@ -179,6 +191,7 @@ export interface RootRouteChildren {
   ListYourPropertyRoute: typeof ListYourPropertyRoute
   ListingsRoute: typeof ListingsRouteWithChildren
   SubmitRoute: typeof SubmitRoute
+  TermsRoute: typeof TermsRoute
   ApiWebhooksListingSubmittedRoute: typeof ApiWebhooksListingSubmittedRoute
   ApiWebhooksTelegramCallbackRoute: typeof ApiWebhooksTelegramCallbackRoute
   ApiPublicContactListingIdRoute: typeof ApiPublicContactListingIdRoute
@@ -186,6 +199,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/submit': {
       id: '/submit'
       path: '/submit'
@@ -304,6 +324,7 @@ const rootRouteChildren: RootRouteChildren = {
   ListYourPropertyRoute: ListYourPropertyRoute,
   ListingsRoute: ListingsRouteWithChildren,
   SubmitRoute: SubmitRoute,
+  TermsRoute: TermsRoute,
   ApiWebhooksListingSubmittedRoute: ApiWebhooksListingSubmittedRoute,
   ApiWebhooksTelegramCallbackRoute: ApiWebhooksTelegramCallbackRoute,
   ApiPublicContactListingIdRoute: ApiPublicContactListingIdRoute,
@@ -311,3 +332,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
