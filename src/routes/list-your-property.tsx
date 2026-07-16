@@ -319,7 +319,7 @@ function ListYourPropertyPage() {
               <div><span className="text-muted-foreground">Property:</span> <b>{submitted.name}</b></div>
               <div><span className="text-muted-foreground">Type:</span> <b>{form.type === "pg" ? "PG" : "Flat"}</b></div>
               <div><span className="text-muted-foreground">Locality:</span> <b>{form.locality}</b></div>
-              <div><span className="text-muted-foreground">College:</span> <b>{form.college}</b></div>
+              <div><span className="text-muted-foreground">Colleges:</span> <b>{form.colleges.join(", ")}</b></div>
               <div><span className="text-muted-foreground">Status:</span> <span className="inline-flex items-center gap-1 font-bold" style={{ color: "#c9a84c" }}>🟡 Pending Review</span></div>
             </div>
             {/* Approval flow */}
