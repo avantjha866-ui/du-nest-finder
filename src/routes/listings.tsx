@@ -200,8 +200,10 @@ function ListingsPage() {
                   key={listing.id}
                   listing={listing}
                   budget={budget}
+                  focusCollege={collegeFilter !== "All colleges" ? collegeFilter : undefined}
                 />
               ))}
+
             </div>
             {visible < filtered.length && (
               <div className="flex justify-center mt-10">
