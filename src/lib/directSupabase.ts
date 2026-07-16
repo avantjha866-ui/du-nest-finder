@@ -14,6 +14,9 @@ export type DirectListingRow = {
   locality: string;
   address: string | null;
   college: string;
+  colleges: string[] | null;
+  college_walk_times: Record<string, number> | null;
+
   gender: string | null;
   curfew: string | null;
   ac: string | null;
