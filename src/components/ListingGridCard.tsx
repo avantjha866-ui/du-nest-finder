@@ -121,9 +121,9 @@ export function ListingGridCard({
         {/* row 1: name + walk */}
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-tagline text-[16px] text-navy leading-snug line-clamp-1">{listing.name}</h3>
-          {listing.walkMinutes > 0 && (
+          {displayWalk > 0 && (
             <span className={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold ${walkColor}`}>
-              🚶 {listing.walkMinutes} min
+              🚶 {displayWalk} min{focusCollege ? ` to ${focusCollege}` : ""}
             </span>
           )}
         </div>
@@ -131,8 +131,9 @@ export function ListingGridCard({
         {/* row 2: locality */}
         <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#1e5a8a" }}>
           <MapPin size={13} />
-          <span className="truncate">{listing.locality} · Near {listing.college}</span>
+          <span className="truncate">{listing.locality} · Near {displayCollege}</span>
         </div>
+
 
         {/* row 3: quick badges */}
         <div className="flex flex-wrap gap-1.5">
