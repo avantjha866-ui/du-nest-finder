@@ -90,7 +90,10 @@ function ListingsPage() {
     const rows = listings
       .filter((l) => {
         if (activeTab !== "All" && l.type !== activeTab) return false;
-        if (collegeFilter !== "All colleges" && l.college !== collegeFilter) return false;
+        if (collegeFilter !== "All colleges") {
+          const nearby = l.colleges && l.colleges.length > 0 ? l.colleges : [l.college];
+          if (!nearby.includes(collegeFilter)) return false;
+        }
         if (genderFilter !== "Any" && l.gender !== genderFilter) return false;
         return true;
       })
@@ -106,6 +109,7 @@ function ListingsPage() {
       return (a.listing.walkMinutes ?? 999) - (b.listing.walkMinutes ?? 999);
     });
   }, [activeTab, collegeFilter, genderFilter, budget, listings]);
+
 
   const empty = filtered.length === 0;
   const collegeName = collegeFilter === "All colleges" ? "DU colleges" : collegeFilter;
