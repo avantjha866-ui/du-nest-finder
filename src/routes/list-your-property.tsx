@@ -42,8 +42,10 @@ type FormState = {
   name: string;
   address: string;
   locality: string;
-  college: string;
+  colleges: string[];
+  collegeWalkTimes: Record<string, string>;
   gender: string;
+
   curfew: string;
   noCurfew: boolean;
   ac: string;
@@ -94,8 +96,10 @@ type FormState = {
 };
 
 const initialForm: FormState = {
-  type: "pg", name: "", address: "", locality: "", college: DU_COLLEGES[0],
+  type: "pg", name: "", address: "", locality: "",
+  colleges: [], collegeWalkTimes: {},
   gender: "", curfew: "", noCurfew: false, ac: "", available_from: "",
+
   has_single: false, price_single: "",
   has_double: false, price_double: "",
   has_triple: false, price_triple: "",
@@ -143,6 +147,7 @@ function ListYourPropertyPage() {
       if (!form.name.trim()) return "Property name is required";
       if (!form.address.trim()) return "Property address is required";
       if (!form.locality.trim()) return "Locality is required";
+      if (form.colleges.length === 0) return "Please select at least one college your property is near";
       if (!form.gender) return "Select a gender policy";
       if (!form.ac) return "Select AC availability";
       if (!form.available_from) return "Available from date is required";
@@ -168,7 +173,10 @@ function ListYourPropertyPage() {
       if (!form.laundry) return "Select laundry option";
     }
     if (s === 4) {
-      if (!toInt(form.walk_min)) return "Walk time to college required";
+      for (const c of form.colleges) {
+        if (!toInt(form.collegeWalkTimes[c])) return `Walk time to ${c} required`;
+      }
+
       if (!form.area_description.trim()) return "Area description required";
     }
     if (s === 5) {
@@ -207,7 +215,12 @@ function ListYourPropertyPage() {
         name: form.name.trim(),
         address: form.address.trim(),
         locality: form.locality.trim(),
-        college: form.college,
+        college: form.colleges[0] ?? null,
+        colleges: form.colleges,
+        college_walk_times: Object.fromEntries(
+          form.colleges.map((c) => [c, toInt(form.collegeWalkTimes[c]) ?? 0]),
+        ),
+
         gender: form.gender,
         curfew: form.noCurfew ? "None" : form.curfew,
         ac: form.ac,
@@ -237,7 +250,7 @@ function ListYourPropertyPage() {
         laundry: form.laundry, laundry_cost: form.laundry_cost,
         maid_available: form.maid_available, maid_cost: form.maid_cost,
         cook_available: form.cook_available, cook_cost: form.cook_cost,
-        walk_min: toInt(form.walk_min),
+        walk_min: form.colleges[0] ? toInt(form.collegeWalkTimes[form.colleges[0]]) : null,
         metro_station: form.metro_station,
         metro_walk_min: toInt(form.metro_walk_min),
         metro_fare: toInt(form.metro_fare),
@@ -306,7 +319,7 @@ function ListYourPropertyPage() {
               <div><span className="text-muted-foreground">Property:</span> <b>{submitted.name}</b></div>
               <div><span className="text-muted-foreground">Type:</span> <b>{form.type === "pg" ? "PG" : "Flat"}</b></div>
               <div><span className="text-muted-foreground">Locality:</span> <b>{form.locality}</b></div>
-              <div><span className="text-muted-foreground">College:</span> <b>{form.college}</b></div>
+              <div><span className="text-muted-foreground">Colleges:</span> <b>{form.colleges.join(", ")}</b></div>
               <div><span className="text-muted-foreground">Status:</span> <span className="inline-flex items-center gap-1 font-bold" style={{ color: "#c9a84c" }}>🟡 Pending Review</span></div>
             </div>
             {/* Approval flow */}
@@ -424,6 +437,23 @@ function ProgressBar({ step }: { step: number }) {
 
 /* ------------ Step 1 ------------ */
 function Step1({ form, upd }: { form: FormState; upd: <K extends keyof FormState>(k: K, v: FormState[K]) => void }) {
+  const [collegeSearch, setCollegeSearch] = useState("");
+  const filteredColleges = DU_COLLEGES.filter((c) =>
+    c.toLowerCase().includes(collegeSearch.toLowerCase()),
+  );
+  const toggleCollege = (c: string) => {
+    const next = form.colleges.includes(c)
+      ? form.colleges.filter((x) => x !== c)
+      : [...form.colleges, c];
+    upd("colleges", next);
+  };
+  const removeCollege = (c: string) => {
+    upd("colleges", form.colleges.filter((x) => x !== c));
+    const wt = { ...form.collegeWalkTimes };
+    delete wt[c];
+    upd("collegeWalkTimes", wt);
+  };
+
   return (
     <div className="space-y-6">
       <SectionTitle title="Tell us about your property" />
@@ -439,11 +469,33 @@ function Step1({ form, upd }: { form: FormState; upd: <K extends keyof FormState
       <Field label="Property address *"><TextInput value={form.address} onChange={(v) => upd("address", v)} placeholder="Full address with lane/street" /></Field>
       <Field label="Locality / Area *"><TextInput value={form.locality} onChange={(v) => upd("locality", v)} placeholder="e.g. Kamla Nagar, Hudson Lane" /></Field>
 
-      <Field label="Nearest DU college *">
-        <select value={form.college} onChange={(e) => upd("college", e.target.value)} className={inputCls}>
-          {DU_COLLEGES.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
+      <Field label="Nearby DU colleges * (select all that apply)">
+        <div className="space-y-3">
+          {form.colleges.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {form.colleges.map((c) => (
+                <span key={c} className="inline-flex items-center gap-1.5 bg-brand-green/10 text-brand-green-dark border border-brand-green/30 rounded-full px-3 py-1 text-xs font-semibold">
+                  {c}
+                  <button type="button" onClick={() => removeCollege(c)} className="hover:text-red-600 font-bold" aria-label={`Remove ${c}`}>×</button>
+                </span>
+              ))}
+            </div>
+          )}
+          <TextInput value={collegeSearch} onChange={setCollegeSearch} placeholder="Search colleges…" />
+          <div className="max-h-56 overflow-y-auto border border-border rounded-xl divide-y divide-border bg-white">
+            {filteredColleges.length === 0 ? (
+              <div className="px-3 py-4 text-xs text-muted-foreground text-center">No colleges match your search</div>
+            ) : filteredColleges.map((c) => (
+              <label key={c} className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer hover:bg-secondary">
+                <input type="checkbox" checked={form.colleges.includes(c)} onChange={() => toggleCollege(c)} />
+                <span>{c}</span>
+              </label>
+            ))}
+          </div>
+          <p className="text-[11px] text-muted-foreground">Selected: {form.colleges.length} college{form.colleges.length === 1 ? "" : "s"}</p>
+        </div>
       </Field>
+
 
       <Field label="Gender policy *">
         <div className="flex flex-wrap gap-2">
@@ -652,8 +704,9 @@ function ExpenseRow({ label, value, cost, onValue, onCost, options, costHint }: 
 
 /* ------------ Step 4 ------------ */
 function Step4({ form, upd }: { form: FormState; upd: <K extends keyof FormState>(k: K, v: FormState[K]) => void }) {
-  const walk = toInt(form.walk_min);
-  const walkLabel = !walk ? "" : walk <= 15 ? "🟢 Great location" : walk <= 25 ? "🟡 Good location" : "🔴 Far from college";
+  const setWalk = (college: string, v: string) => {
+    upd("collegeWalkTimes", { ...form.collegeWalkTimes, [college]: v });
+  };
   const secScore = form.security.length;
   const toggleSec = (opt: string) => {
     const next = form.security.includes(opt) ? form.security.filter((s) => s !== opt) : [...form.security, opt];
@@ -661,15 +714,32 @@ function Step4({ form, upd }: { form: FormState; upd: <K extends keyof FormState
   };
   return (
     <div className="space-y-6">
-      <SectionTitle title="Location" />
-      <Field label="Walk time to college gate *">
-        <div className="flex items-center gap-3">
-          <input type="number" value={form.walk_min} onChange={(e) => upd("walk_min", e.target.value)} className={inputCls + " max-w-[120px]"} />
-          <span className="text-navy text-sm">minutes</span>
-          {walkLabel && <span className="text-sm font-bold">{walkLabel}</span>}
+      <SectionTitle title="Walk time to each college *" subtitle="Enter the actual walking minutes from your property to each college gate" />
+      {form.colleges.length === 0 ? (
+        <p className="text-sm text-red-600">Please go back to Step 1 and select at least one nearby college.</p>
+      ) : (
+        <div className="space-y-3">
+          {form.colleges.map((c) => {
+            const w = toInt(form.collegeWalkTimes[c]);
+            const label = !w ? "" : w <= 15 ? "🟢 Great" : w <= 25 ? "🟡 Good" : "🔴 Far";
+            return (
+              <div key={c} className="flex items-center gap-3 bg-white border border-border rounded-xl px-3 py-2">
+                <span className="flex-1 text-sm text-navy font-medium">{c}</span>
+                <input
+                  type="number"
+                  value={form.collegeWalkTimes[c] ?? ""}
+                  onChange={(e) => setWalk(c, e.target.value)}
+                  className={inputCls + " max-w-[110px]"}
+                  placeholder="min"
+                />
+                <span className="text-xs text-muted-foreground w-8">min</span>
+                {label && <span className="text-xs font-bold w-20 text-right">{label}</span>}
+              </div>
+            );
+          })}
         </div>
-        <p className="text-xs text-muted-foreground mt-1">Actual walking minutes, not driving. Students verify this.</p>
-      </Field>
+      )}
+
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field label="Nearest metro station"><TextInput value={form.metro_station} onChange={(v) => upd("metro_station", v)} placeholder="e.g. Vishwavidyalaya" /></Field>

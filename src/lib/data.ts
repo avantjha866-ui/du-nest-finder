@@ -89,7 +89,10 @@ export type Listing = {
   name: string;
   locality: string;
   college: College;
+  colleges?: string[];
+  collegeWalkTimes?: Record<string, number>;
   rent: number;
+
   rentSingle?: number;
   rentDouble?: number;
   rentTriple?: number;

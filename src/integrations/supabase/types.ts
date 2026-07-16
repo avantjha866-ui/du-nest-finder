@@ -25,6 +25,8 @@ export type Database = {
           breakfast_menu: string | null
           breakfast_time: string | null
           college: string
+          college_walk_times: Json | null
+          colleges: string[] | null
           cook_available: boolean
           cook_cost: string | null
           created_at: string
@@ -99,6 +101,8 @@ export type Database = {
           breakfast_menu?: string | null
           breakfast_time?: string | null
           college: string
+          college_walk_times?: Json | null
+          colleges?: string[] | null
           cook_available?: boolean
           cook_cost?: string | null
           created_at?: string
@@ -173,6 +177,8 @@ export type Database = {
           breakfast_menu?: string | null
           breakfast_time?: string | null
           college?: string
+          college_walk_times?: Json | null
+          colleges?: string[] | null
           cook_available?: boolean
           cook_cost?: string | null
           created_at?: string

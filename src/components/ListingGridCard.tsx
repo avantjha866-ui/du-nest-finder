@@ -10,15 +10,21 @@ export function ListingGridCard({
   listing,
   budget = 0,
   budgetOptions = [],
+  focusCollege,
 }: {
   listing: Listing;
   budget?: number;
   budgetOptions?: BudgetOption[];
+  focusCollege?: string;
 }) {
   const { has, toggle } = useCompareList();
   const [saved, setSaved] = useState(false);
   const cover = listing.photos?.[0];
   const photoCount = listing.photos?.length ?? 0;
+  const focusWalk = focusCollege ? listing.collegeWalkTimes?.[focusCollege] : undefined;
+  const displayWalk = focusWalk ?? listing.walkMinutes;
+  const displayCollege = focusCollege ?? listing.college;
+
 
   const priceLabel = listing.type === "PG"
     ? (listing.rent > 0 ? `From ₹${listing.rent.toLocaleString("en-IN")}/mo` : "Price on request")
@@ -37,9 +43,10 @@ export function ListingGridCard({
       ].filter(Boolean) as { label: string; price: number }[];
 
   const walkColor =
-    listing.walkMinutes <= 15 ? "text-brand-olive bg-[#e9eddc]"
-    : listing.walkMinutes <= 25 ? "text-[#a3701f] bg-[#faedd1]"
+    displayWalk <= 15 ? "text-brand-olive bg-[#e9eddc]"
+    : displayWalk <= 25 ? "text-[#a3701f] bg-[#faedd1]"
     : "text-brand-orange bg-[#fbe5dc]";
+
 
   const handleContact = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -114,9 +121,9 @@ export function ListingGridCard({
         {/* row 1: name + walk */}
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-tagline text-[16px] text-navy leading-snug line-clamp-1">{listing.name}</h3>
-          {listing.walkMinutes > 0 && (
+          {displayWalk > 0 && (
             <span className={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold ${walkColor}`}>
-              🚶 {listing.walkMinutes} min
+              🚶 {displayWalk} min{focusCollege ? ` to ${focusCollege}` : ""}
             </span>
           )}
         </div>
@@ -124,8 +131,9 @@ export function ListingGridCard({
         {/* row 2: locality */}
         <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#1e5a8a" }}>
           <MapPin size={13} />
-          <span className="truncate">{listing.locality} · Near {listing.college}</span>
+          <span className="truncate">{listing.locality} · Near {displayCollege}</span>
         </div>
+
 
         {/* row 3: quick badges */}
         <div className="flex flex-wrap gap-1.5">
