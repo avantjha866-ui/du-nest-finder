@@ -43,9 +43,10 @@ export function ListingGridCard({
       ].filter(Boolean) as { label: string; price: number }[];
 
   const walkColor =
-    listing.walkMinutes <= 15 ? "text-brand-olive bg-[#e9eddc]"
-    : listing.walkMinutes <= 25 ? "text-[#a3701f] bg-[#faedd1]"
+    displayWalk <= 15 ? "text-brand-olive bg-[#e9eddc]"
+    : displayWalk <= 25 ? "text-[#a3701f] bg-[#faedd1]"
     : "text-brand-orange bg-[#fbe5dc]";
+
 
   const handleContact = (e: React.MouseEvent) => {
     e.preventDefault();
