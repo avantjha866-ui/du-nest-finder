@@ -96,8 +96,10 @@ type FormState = {
 };
 
 const initialForm: FormState = {
-  type: "pg", name: "", address: "", locality: "", college: DU_COLLEGES[0],
+  type: "pg", name: "", address: "", locality: "",
+  colleges: [], collegeWalkTimes: {},
   gender: "", curfew: "", noCurfew: false, ac: "", available_from: "",
+
   has_single: false, price_single: "",
   has_double: false, price_double: "",
   has_triple: false, price_triple: "",
