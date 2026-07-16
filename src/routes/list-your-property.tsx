@@ -42,8 +42,10 @@ type FormState = {
   name: string;
   address: string;
   locality: string;
-  college: string;
+  colleges: string[];
+  collegeWalkTimes: Record<string, string>;
   gender: string;
+
   curfew: string;
   noCurfew: boolean;
   ac: string;
