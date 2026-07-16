@@ -437,6 +437,23 @@ function ProgressBar({ step }: { step: number }) {
 
 /* ------------ Step 1 ------------ */
 function Step1({ form, upd }: { form: FormState; upd: <K extends keyof FormState>(k: K, v: FormState[K]) => void }) {
+  const [collegeSearch, setCollegeSearch] = useState("");
+  const filteredColleges = DU_COLLEGES.filter((c) =>
+    c.toLowerCase().includes(collegeSearch.toLowerCase()),
+  );
+  const toggleCollege = (c: string) => {
+    const next = form.colleges.includes(c)
+      ? form.colleges.filter((x) => x !== c)
+      : [...form.colleges, c];
+    upd("colleges", next);
+  };
+  const removeCollege = (c: string) => {
+    upd("colleges", form.colleges.filter((x) => x !== c));
+    const wt = { ...form.collegeWalkTimes };
+    delete wt[c];
+    upd("collegeWalkTimes", wt);
+  };
+
   return (
     <div className="space-y-6">
       <SectionTitle title="Tell us about your property" />
@@ -452,11 +469,33 @@ function Step1({ form, upd }: { form: FormState; upd: <K extends keyof FormState
       <Field label="Property address *"><TextInput value={form.address} onChange={(v) => upd("address", v)} placeholder="Full address with lane/street" /></Field>
       <Field label="Locality / Area *"><TextInput value={form.locality} onChange={(v) => upd("locality", v)} placeholder="e.g. Kamla Nagar, Hudson Lane" /></Field>
 
-      <Field label="Nearest DU college *">
-        <select value={form.college} onChange={(e) => upd("college", e.target.value)} className={inputCls}>
-          {DU_COLLEGES.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
+      <Field label="Nearby DU colleges * (select all that apply)">
+        <div className="space-y-3">
+          {form.colleges.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {form.colleges.map((c) => (
+                <span key={c} className="inline-flex items-center gap-1.5 bg-brand-green/10 text-brand-green-dark border border-brand-green/30 rounded-full px-3 py-1 text-xs font-semibold">
+                  {c}
+                  <button type="button" onClick={() => removeCollege(c)} className="hover:text-red-600 font-bold" aria-label={`Remove ${c}`}>×</button>
+                </span>
+              ))}
+            </div>
+          )}
+          <TextInput value={collegeSearch} onChange={setCollegeSearch} placeholder="Search colleges…" />
+          <div className="max-h-56 overflow-y-auto border border-border rounded-xl divide-y divide-border bg-white">
+            {filteredColleges.length === 0 ? (
+              <div className="px-3 py-4 text-xs text-muted-foreground text-center">No colleges match your search</div>
+            ) : filteredColleges.map((c) => (
+              <label key={c} className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer hover:bg-secondary">
+                <input type="checkbox" checked={form.colleges.includes(c)} onChange={() => toggleCollege(c)} />
+                <span>{c}</span>
+              </label>
+            ))}
+          </div>
+          <p className="text-[11px] text-muted-foreground">Selected: {form.colleges.length} college{form.colleges.length === 1 ? "" : "s"}</p>
+        </div>
       </Field>
+
 
       <Field label="Gender policy *">
         <div className="flex flex-wrap gap-2">
