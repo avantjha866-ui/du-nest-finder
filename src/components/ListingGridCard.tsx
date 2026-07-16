@@ -10,15 +10,21 @@ export function ListingGridCard({
   listing,
   budget = 0,
   budgetOptions = [],
+  focusCollege,
 }: {
   listing: Listing;
   budget?: number;
   budgetOptions?: BudgetOption[];
+  focusCollege?: string;
 }) {
   const { has, toggle } = useCompareList();
   const [saved, setSaved] = useState(false);
   const cover = listing.photos?.[0];
   const photoCount = listing.photos?.length ?? 0;
+  const focusWalk = focusCollege ? listing.collegeWalkTimes?.[focusCollege] : undefined;
+  const displayWalk = focusWalk ?? listing.walkMinutes;
+  const displayCollege = focusCollege ?? listing.college;
+
 
   const priceLabel = listing.type === "PG"
     ? (listing.rent > 0 ? `From ₹${listing.rent.toLocaleString("en-IN")}/mo` : "Price on request")
