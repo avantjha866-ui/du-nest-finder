@@ -704,8 +704,9 @@ function ExpenseRow({ label, value, cost, onValue, onCost, options, costHint }: 
 
 /* ------------ Step 4 ------------ */
 function Step4({ form, upd }: { form: FormState; upd: <K extends keyof FormState>(k: K, v: FormState[K]) => void }) {
-  const walk = toInt(form.walk_min);
-  const walkLabel = !walk ? "" : walk <= 15 ? "🟢 Great location" : walk <= 25 ? "🟡 Good location" : "🔴 Far from college";
+  const setWalk = (college: string, v: string) => {
+    upd("collegeWalkTimes", { ...form.collegeWalkTimes, [college]: v });
+  };
   const secScore = form.security.length;
   const toggleSec = (opt: string) => {
     const next = form.security.includes(opt) ? form.security.filter((s) => s !== opt) : [...form.security, opt];
@@ -713,15 +714,32 @@ function Step4({ form, upd }: { form: FormState; upd: <K extends keyof FormState
   };
   return (
     <div className="space-y-6">
-      <SectionTitle title="Location" />
-      <Field label="Walk time to college gate *">
-        <div className="flex items-center gap-3">
-          <input type="number" value={form.walk_min} onChange={(e) => upd("walk_min", e.target.value)} className={inputCls + " max-w-[120px]"} />
-          <span className="text-navy text-sm">minutes</span>
-          {walkLabel && <span className="text-sm font-bold">{walkLabel}</span>}
+      <SectionTitle title="Walk time to each college *" subtitle="Enter the actual walking minutes from your property to each college gate" />
+      {form.colleges.length === 0 ? (
+        <p className="text-sm text-red-600">Please go back to Step 1 and select at least one nearby college.</p>
+      ) : (
+        <div className="space-y-3">
+          {form.colleges.map((c) => {
+            const w = toInt(form.collegeWalkTimes[c]);
+            const label = !w ? "" : w <= 15 ? "🟢 Great" : w <= 25 ? "🟡 Good" : "🔴 Far";
+            return (
+              <div key={c} className="flex items-center gap-3 bg-white border border-border rounded-xl px-3 py-2">
+                <span className="flex-1 text-sm text-navy font-medium">{c}</span>
+                <input
+                  type="number"
+                  value={form.collegeWalkTimes[c] ?? ""}
+                  onChange={(e) => setWalk(c, e.target.value)}
+                  className={inputCls + " max-w-[110px]"}
+                  placeholder="min"
+                />
+                <span className="text-xs text-muted-foreground w-8">min</span>
+                {label && <span className="text-xs font-bold w-20 text-right">{label}</span>}
+              </div>
+            );
+          })}
         </div>
-        <p className="text-xs text-muted-foreground mt-1">Actual walking minutes, not driving. Students verify this.</p>
-      </Field>
+      )}
+
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field label="Nearest metro station"><TextInput value={form.metro_station} onChange={(v) => upd("metro_station", v)} placeholder="e.g. Vishwavidyalaya" /></Field>
