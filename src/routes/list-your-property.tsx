@@ -250,7 +250,7 @@ function ListYourPropertyPage() {
         laundry: form.laundry, laundry_cost: form.laundry_cost,
         maid_available: form.maid_available, maid_cost: form.maid_cost,
         cook_available: form.cook_available, cook_cost: form.cook_cost,
-        walk_min: toInt(form.walk_min),
+        walk_min: form.colleges[0] ? toInt(form.collegeWalkTimes[form.colleges[0]]) : null,
         metro_station: form.metro_station,
         metro_walk_min: toInt(form.metro_walk_min),
         metro_fare: toInt(form.metro_fare),
