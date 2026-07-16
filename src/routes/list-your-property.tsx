@@ -147,6 +147,7 @@ function ListYourPropertyPage() {
       if (!form.name.trim()) return "Property name is required";
       if (!form.address.trim()) return "Property address is required";
       if (!form.locality.trim()) return "Locality is required";
+      if (form.colleges.length === 0) return "Please select at least one college your property is near";
       if (!form.gender) return "Select a gender policy";
       if (!form.ac) return "Select AC availability";
       if (!form.available_from) return "Available from date is required";
@@ -172,7 +173,10 @@ function ListYourPropertyPage() {
       if (!form.laundry) return "Select laundry option";
     }
     if (s === 4) {
-      if (!toInt(form.walk_min)) return "Walk time to college required";
+      for (const c of form.colleges) {
+        if (!toInt(form.collegeWalkTimes[c])) return `Walk time to ${c} required`;
+      }
+
       if (!form.area_description.trim()) return "Area description required";
     }
     if (s === 5) {
