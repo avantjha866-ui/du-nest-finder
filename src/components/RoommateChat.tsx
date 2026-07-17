@@ -41,8 +41,8 @@ export function RoommateChat() {
   const [loadingProfiles, setLoadingProfiles] = useState(false);
 
   // chat state
-  const [myName, setMyName] = useState("");
-  const [myCollege, setMyCollege] = useState(COLLEGES[0]);
+  const [myName, setMyName] = useState<string>("");
+  const [myCollege, setMyCollege] = useState<string>(COLLEGES[0]);
   const [nameSet, setNameSet] = useState(false);
 
   useEffect(() => {
