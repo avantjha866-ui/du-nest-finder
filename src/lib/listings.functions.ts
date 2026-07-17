@@ -5,6 +5,31 @@ import type { College, Gender, Listing, ListingType } from "@/lib/data";
 const text = (value: string | null | undefined, fallback = "Not specified") =>
   (value ?? "").trim() || fallback;
 
+function parseCollegesList(row: DirectListingRow): string[] | undefined {
+  if (row.colleges_list && row.colleges_list.trim()) {
+    return row.colleges_list.split(",").map((s) => s.trim()).filter(Boolean);
+  }
+  if (row.colleges && row.colleges.length > 0) return row.colleges;
+  return undefined;
+}
+
+function parseWalkTimes(row: DirectListingRow): Record<string, number> | undefined {
+  if (row.college_walk_times_text && row.college_walk_times_text.trim()) {
+    const txt = row.college_walk_times_text.trim();
+    // Try JSON first
+    if (txt.startsWith("{")) {
+      try { return JSON.parse(txt); } catch { /* fall through */ }
+    }
+    const out: Record<string, number> = {};
+    for (const pair of txt.split(",")) {
+      const [k, v] = pair.split(":").map((s) => s.trim());
+      if (k) out[k] = Number(v) || 0;
+    }
+    return Object.keys(out).length ? out : undefined;
+  }
+  return row.college_walk_times ?? undefined;
+}
+
 const boolish = (v: string | null | undefined) =>
   ["yes", "true", "included", "available"].includes((v ?? "").toLowerCase());
 
