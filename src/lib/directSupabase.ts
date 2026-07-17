@@ -16,6 +16,8 @@ export type DirectListingRow = {
   college: string;
   colleges: string[] | null;
   college_walk_times: Record<string, number> | null;
+  colleges_list: string | null;
+  college_walk_times_text: string | null;
 
   gender: string | null;
   curfew: string | null;
