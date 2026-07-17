@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   MapPin, Share2, Users, User, Utensils, Train, Zap, ShieldCheck, Clock,
   Home as HomeIcon, Building2, Camera, X, ChevronLeft, ChevronRight,
