@@ -131,7 +131,7 @@ export function RoommateChat() {
     if (!text) return;
     setSending(true);
     setMsgInput("");
-    const { error } = await supabase.from("chat_messages").insert({
+    const { error } = await (supabase.from as any)("chat_messages").insert({
       sender_name: myName, sender_college: myCollege,
       message: text, room_id: "general",
     });
