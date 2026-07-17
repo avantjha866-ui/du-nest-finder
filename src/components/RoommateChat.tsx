@@ -102,10 +102,10 @@ export function RoommateChat() {
     }
 
     // load last 50 messages
-    supabase.from("chat_messages").select("*")
+    (supabase.from as any)("chat_messages").select("*")
       .eq("room_id", "general").order("created_at", { ascending: true }).limit(50)
-      .then(({ data }) => {
-        setMessages((data as ChatMsg[]) ?? []);
+      .then(({ data }: { data: ChatMsg[] | null }) => {
+        setMessages(data ?? []);
         setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
       });
 
