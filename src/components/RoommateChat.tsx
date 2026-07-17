@@ -41,8 +41,8 @@ export function RoommateChat() {
   const [loadingProfiles, setLoadingProfiles] = useState(false);
 
   // chat state
-  const [myName, setMyName] = useState("");
-  const [myCollege, setMyCollege] = useState(COLLEGES[0]);
+  const [myName, setMyName] = useState<string>("");
+  const [myCollege, setMyCollege] = useState<string>(COLLEGES[0]);
   const [nameSet, setNameSet] = useState(false);
 
   useEffect(() => {
@@ -102,10 +102,10 @@ export function RoommateChat() {
     }
 
     // load last 50 messages
-    supabase.from("chat_messages").select("*")
+    (supabase.from as any)("chat_messages").select("*")
       .eq("room_id", "general").order("created_at", { ascending: true }).limit(50)
-      .then(({ data }) => {
-        setMessages((data as ChatMsg[]) ?? []);
+      .then(({ data }: { data: ChatMsg[] | null }) => {
+        setMessages(data ?? []);
         setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
       });
 
@@ -131,7 +131,7 @@ export function RoommateChat() {
     if (!text) return;
     setSending(true);
     setMsgInput("");
-    const { error } = await supabase.from("chat_messages").insert({
+    const { error } = await (supabase.from as any)("chat_messages").insert({
       sender_name: myName, sender_college: myCollege,
       message: text, room_id: "general",
     });

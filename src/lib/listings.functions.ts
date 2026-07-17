@@ -5,6 +5,31 @@ import type { College, Gender, Listing, ListingType } from "@/lib/data";
 const text = (value: string | null | undefined, fallback = "Not specified") =>
   (value ?? "").trim() || fallback;
 
+function parseCollegesList(row: DirectListingRow): string[] | undefined {
+  if (row.colleges_list && row.colleges_list.trim()) {
+    return row.colleges_list.split(",").map((s) => s.trim()).filter(Boolean);
+  }
+  if (row.colleges && row.colleges.length > 0) return row.colleges;
+  return undefined;
+}
+
+function parseWalkTimes(row: DirectListingRow): Record<string, number> | undefined {
+  if (row.college_walk_times_text && row.college_walk_times_text.trim()) {
+    const txt = row.college_walk_times_text.trim();
+    // Try JSON first
+    if (txt.startsWith("{")) {
+      try { return JSON.parse(txt); } catch { /* fall through */ }
+    }
+    const out: Record<string, number> = {};
+    for (const pair of txt.split(",")) {
+      const [k, v] = pair.split(":").map((s) => s.trim());
+      if (k) out[k] = Number(v) || 0;
+    }
+    return Object.keys(out).length ? out : undefined;
+  }
+  return row.college_walk_times ?? undefined;
+}
+
 const boolish = (v: string | null | undefined) =>
   ["yes", "true", "included", "available"].includes((v ?? "").toLowerCase());
 
@@ -57,8 +82,8 @@ function mapListing(row: DirectListingRow): Listing | null {
     name: text(row.name, "Unnamed listing"),
     locality: text(row.locality),
     college: text(row.college, "Delhi University") as College,
-    colleges: row.colleges && row.colleges.length > 0 ? row.colleges : undefined,
-    collegeWalkTimes: row.college_walk_times ?? undefined,
+    colleges: parseCollegesList(row),
+    collegeWalkTimes: parseWalkTimes(row),
     rent,
     walkMinutes: row.walk_min ?? 0,
     gender: mapGender(row.gender),
@@ -113,7 +138,7 @@ function mapListing(row: DirectListingRow): Listing | null {
 }
 
 const PUBLIC_SELECT =
-  "id, created_at, status, type, name, locality, address, college, colleges, college_walk_times, gender, curfew, ac, negotiable, available_from, has_single, price_single, has_double, price_double, has_triple, price_triple, total_rent, ideal_sharers, per_person_2, per_person_3, per_person_4, flat_type, walk_min, metro_station, metro_walk_min, metro_fare, auto_cost, food_type, breakfast_time, breakfast_menu, lunch_time, lunch_menu, dinner_time, dinner_menu, electricity, electricity_cost, water, water_cost, wifi, wifi_cost, laundry, laundry_cost, maid_available, maid_cost, cook_available, cook_cost, deposit, notice_period, security, security_score, gym_name, gym_distance, gym_price, jogging_spot, market, hospital, atm, pharmacy, area_description, photos, is_featured";
+  "id, created_at, status, type, name, locality, address, college, colleges, college_walk_times, colleges_list, college_walk_times_text, gender, curfew, ac, negotiable, available_from, has_single, price_single, has_double, price_double, has_triple, price_triple, total_rent, ideal_sharers, per_person_2, per_person_3, per_person_4, flat_type, walk_min, metro_station, metro_walk_min, metro_fare, auto_cost, food_type, breakfast_time, breakfast_menu, lunch_time, lunch_menu, dinner_time, dinner_menu, electricity, electricity_cost, water, water_cost, wifi, wifi_cost, laundry, laundry_cost, maid_available, maid_cost, cook_available, cook_cost, deposit, notice_period, security, security_score, gym_name, gym_distance, gym_price, jogging_spot, market, hospital, atm, pharmacy, area_description, photos, is_featured";
 
 
 export const getApprovedListings = createServerFn({ method: "GET" }).handler(async () => {

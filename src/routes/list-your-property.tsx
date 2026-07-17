@@ -216,10 +216,10 @@ function ListYourPropertyPage() {
         address: form.address.trim(),
         locality: form.locality.trim(),
         college: form.colleges[0] ?? null,
-        colleges: form.colleges,
-        college_walk_times: Object.fromEntries(
-          form.colleges.map((c) => [c, toInt(form.collegeWalkTimes[c]) ?? 0]),
-        ),
+        colleges_list: form.colleges.join(","),
+        college_walk_times_text: form.colleges
+          .map((c) => `${c}:${toInt(form.collegeWalkTimes[c]) ?? 0}`)
+          .join(","),
 
         gender: form.gender,
         curfew: form.noCurfew ? "None" : form.curfew,
